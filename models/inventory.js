@@ -10,10 +10,15 @@ const inventorySchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	itemCategory:{
+	location:{
+		type: String,
+		required: true
+	},
+	category:{
 		type: String,
 		required: true
 	}
+
 })
 
 inventorySchema.methods.serialize = function() {
@@ -21,7 +26,8 @@ inventorySchema.methods.serialize = function() {
 		id: this._id,
 		item: this.item,
 		description: this.description,
-		itemCategory: this.itemCategory
+		location: this.location,
+		category: this.itemCategory
 	}
 }
 

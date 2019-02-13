@@ -1,50 +1,60 @@
-'use strict';
+"use strict";
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const passport = require("passport");
 
-const express = require('express');
-const mongoose = require('mongoose');
-const morgan = require('morgan');
-const passport = require('passport');
+const { router: usersRouter } = require("./users");
+const { router: inventoryRouter } = require("./inventory");
+
+const { router: authRouter, localStrategy, jwtStrategy } = require("./auth");
 
 mongoose.Promise = global.Promise;
 
-const { PORT, DATABASE_URL, TEST_DATABASE_URL } = require('./config');
-
-
-const userRouter  = require('./users/user-router.js');
-const scoreRouter  = require('./router');
-const { localStrategy, jwtStrategy } = require('./users/auth-strategies')
-
+const { PORT, DATABASE_URL } = require("./config");
 
 const app = express();
 
-// passport.use(localStrategy);
-// passport.use(jwtStrategy);
+// Logging
+app.use(morgan("common"));
 
-app.use(express.static("public"));
-app.use(morgan('common'));
-app.use(express.json());
+// CORS
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
+  if (req.method === "OPTIONS") {
+    return res.send(204);
+  }
+  next();
+});
 
-app.use('/api/users', userRouter);
-app.use(scoreRouter);
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
+app.use("/api/users/", usersRouter);
+app.use("/api/inventory/", inventoryRouter);
+app.use("/api/auth/", authRouter);
 
-
-
+app.use("*", (req, res) => {
+  return res.status(404).json({ message: "Not Found" });
+});
 
 let server;
 
-function runServer(databaseUrl = DATABASE_URL, port = PORT) {
-
+function runServer(databaseUrl, port = PORT) {
   return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl,{ useNewUrlParser: true }, err => {
+    mongoose.connect(databaseUrl, err => {
       if (err) {
         return reject(err);
       }
-      server = app.listen(port, () => {
-        console.log(`Your app is listening on port ${port}`);
-        resolve();
-      })
-        .on('error', err => {
+      server = app
+        .listen(port, () => {
+          console.log(`Your app is listening on port ${port}`);
+          resolve();
+        })
+        .on("error", err => {
           mongoose.disconnect();
           reject(err);
         });
@@ -53,22 +63,21 @@ function runServer(databaseUrl = DATABASE_URL, port = PORT) {
 }
 
 function closeServer() {
-    return mongoose.disconnect().then(() => {
-        return new Promise((resolve, reject) => {
-            console.log('Closing server');
-            server.close(err => {
-                if(err) {
-                    return reject(err)
-                }
-                resolve();
-            });
-        });
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log("Closing server");
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
     });
+  });
 }
 
 if (require.main === module) {
   runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
-module.exports = { runServer, app, closeServer };
-
+module.exports = { app, runServer, closeServer };

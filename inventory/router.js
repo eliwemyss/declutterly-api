@@ -17,12 +17,8 @@ const stringFields = [
 ];
 
 router.get("/", jwtAuth, (req, res) => {
-  let filter = req.query.status ? { status: req.query.status } : {};
-  filter.user = req.user.id;
-  console.log(filter);
-  console.log(req.user);
-  Inventory.find(filter)
-
+  Inventory
+    .find()
     .then(inventory => {
       res.json(inventory.map(inventory => inventory.serialize()));
     })
@@ -37,7 +33,7 @@ router.get("/:id", (req, res) => {
     .then(inventory => res.json(inventory.serialize()))
     .catch(err => {
       console.error(err);
-      res.status(500).json({ error: "something went horribly awry" });
+      res.status(500).json({ error: "something not right" });
     });
 });
 

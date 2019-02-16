@@ -31,7 +31,8 @@ inventorySchema.methods.serialize = function() {
 		item: this.item,
 		description: this.description,
 		location: this.location,
-		category: this.itemCategory
+		category: this.category,
+		decision: this.decision
 	}
 }
 

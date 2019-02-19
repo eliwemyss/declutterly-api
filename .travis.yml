@@ -1,0 +1,11 @@
+language: node_js
+node_js: node
+services:
+- mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: e4sTTBDz2TkG95b+pUAB5Vp5eDXJ6CTQgEePUtjqqRNruEW9ym8KiTv1eRG5/zyFhilwvPSx3zgOXJpQVqg5DXM+QQS9RXRK9OOvi1DbWsjXreClaCc6KP6f2/c27itF7bu+UjGyeSfLmt24Qh4lQsGu7sqKP8/ZzlhD/iEWQsHkm4SFjEWCIPj7Lc7OcB5VaE5qLuhwLTpdO7QAAGK489dRGjJ5dmXQJDROIZxu1XMbUxygnukvc/EPjBiOppaqGTMyFkWOiYOMr22QaqN+oGw1d+0agG8bcaPyRYbaxWFN4Xvvd5dN2UVRqzdMwBcabpB4WE+QyGEtcr6/lL4d8ngeNq9ws0M+m8pT1tyz1lRDaUVlmoBzeRjF7hmscnY39gsvBUwn8c9C32E34VpOrW6zkWOmwwQkqi0wxdSLP7EttYKrqq5kTO3oJA1Diao0hfpMkFcTXcF+zf2gDLM87LOBhq7Rw9KTluchzDEPH9Cjj1mWT6LgA9aO6SPNAa9olOT6g9fhBCjLdDDH5M1scWfwVudZST6FJUDWs1rUY5g0h6QzI4DCoezVdSJyHpDlWlb1wVOQc/2vImK7+4iyRs5q0yWvYyuqT2gzozkZRRsJTs25mJ/z84MJECk/Y8UjN1JosytGqBv0CcA8neV6Cuuc5TGIcE6taEQnmEvZVnE=
+  app: declutterly-api
+  on:
+    repo: eliwemyss/declutterly-api

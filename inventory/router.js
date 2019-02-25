@@ -18,7 +18,7 @@ const stringFields = [
 
 router.get("/", jwtAuth, (req, res) => {
   Inventory
-    .find()
+    .find({userId: req.user.id })
     .then(inventory => {
       res.json(inventory.map(inventory => inventory.serialize()));
     })
@@ -53,7 +53,7 @@ router.post("/", jwtAuth, jsonParser, (req, res) => {
     location: req.body.location,
     category: req.body.category,
     decision: req.body.decision,
-    user: req.user.id
+    userId: req.user.id
   })
     .then(inventory => res.status(201).json(inventory.serialize()))
     .catch(err => {

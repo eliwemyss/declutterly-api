@@ -21,6 +21,10 @@ const inventorySchema = mongoose.Schema({
 	decision:{
 		type: String,
 		required: true
+	},
+	userId:{
+		type: String,
+		required: false
 	}
 
 })
@@ -32,7 +36,8 @@ inventorySchema.methods.serialize = function() {
 		description: this.description,
 		location: this.location,
 		category: this.category,
-		decision: this.decision
+		decision: this.decision,
+		userId: this.userId
 	}
 }
 
